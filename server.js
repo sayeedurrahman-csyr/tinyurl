@@ -18,7 +18,7 @@ app.post('/api/shorten-url', async (req, res) => {
         });
     }
 
-    if (long_url == '/' || long_url == '/api') {
+    if (long_url == '/' || long_url == '/api' || long_url == '/api/shorten-url' || long_url == '/404') {
         return res.status(400).json({
             'message': 'Forbidden long url input',
             'error': 'Bad Reqeust'
@@ -57,7 +57,7 @@ app.post('/api/shorten-url', async (req, res) => {
                 response = await fetch(protocol + long_url, { method: 'HEAD' });
             } catch (innerError) {
                 return res.status(400).json({ 
-                    'message': 'The provided long_url is not reachable.',
+                    'message': 'The provided long_url is not reachable. This may happen if the URL is invalid or if the server hosting the URL does not support HEAD requests. If you believe this is not right, please specify the exact protocol you want to use (http://example.com or https://example.com).',
                     'error': 'Network Error' 
                 });
             }
@@ -96,6 +96,34 @@ app.post('/api/shorten-url', async (req, res) => {
             'error': 'Internal Server Error' 
         });
     }
+});
+
+app.get('/404', (req, res) => {
+    return res.sendFile(path.join(__dirname, 'public', 'NotFound.html'));
+});
+
+app.get('/*splat', async (req, res, next) => {
+    const alias = req.params.splat[0];
+    // For development
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate');
+    // For production
+    // res.set('Cache-Control', 'public, max-age=3600'); // Cache for 1 hour
+    
+    try {
+        const [rows] = await db.query("SELECT * FROM mapping WHERE alias = ?", [alias]);
+        
+        if (rows.length == 0) {
+            return res.redirect('/404');
+        } else {
+            return res.redirect(308, rows[0].long_url);
+        }
+    } catch(err) {
+        console.error('Error retrieving long URL from database:', err);
+        return res.status(500).json({ 
+            'message': 'An error occurred while retrieving the long URL.',
+            'error': 'Internal Server Error' 
+        });
+    };
 });
 
 app.listen(PORT, () => {
