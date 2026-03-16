@@ -10,8 +10,6 @@ document.getElementById('shortenForm').addEventListener('submit', async (e) => {
         alias: document.getElementById('alias').value.trim()
     };
 
-    console.log('Sending data:', formData);
-
     try {
         const response = await fetch(`${API_URL}/api/shorten-url`, {
             method: 'POST',
