@@ -18,8 +18,15 @@ app.post('/api/shorten-url', async (req, res) => {
         });
     }
 
+    if (long_url == '/' || long_url == '/api') {
+        return res.status(400).json({
+            'message': 'Forbidden long url input',
+            'error': 'Bad Reqeust'
+        })
+    }
+
     if (!alias) {
-        // Random alphaneumeric string of length
+        // Generate random alphaneumeric string of length
         length = 6;
         alias = Math.random().toString(36).substring(2, 2 + length);
     }

@@ -15,7 +15,7 @@ Non-Functional Requirements
 1. Datastores for storing short urls
 	- MySQL
 	- Does not have TTL but same functionality can be achieved using scheduled events
-	- Perform cleanup at 2 AM (Bangladesh Time)
+	- Perform cleanup at 1 AM (Bangladesh Time)
 2. When storing long urls
 	- Users may or may not prepend protocol: http:// or https://
 	- If it's not specified, default to 'https://' and start a HEAD request (performance bottlekneck that will have to be addressed later)
