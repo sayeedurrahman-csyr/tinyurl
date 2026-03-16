@@ -11,11 +11,17 @@ app.use(express.json()); // This middleware is needed for dealing with JSON.
 app.post('/api/shorten-url', async (req, res) => {
     let { alias, long_url } = req.body;
 
-    if (!alias || !long_url) {
+    if (!long_url) {
         return res.status(400).json({ 
             'message': 'Alias and long_url are required fields.',
             'error': 'Bad Request' 
         });
+    }
+
+    if (!alias) {
+        // Random alphaneumeric string of length
+        length = 6;
+        alias = Math.random().toString(36).substring(2, 2 + length);
     }
 
     long_url = long_url.trim().toLowerCase();
