@@ -6,7 +6,7 @@ const PORT = 3000;
 const app = express();
 
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.json());
+app.use(express.json()); // This middleware is needed for dealing with JSON.
 
 app.post('/api/shorten-url', async (req, res) => {
     const { alias, long_url } = req.body;
@@ -20,12 +20,14 @@ app.post('/api/shorten-url', async (req, res) => {
         });
     }
     catch (err) {
-        console.error('Error shortening URL:', err);
-        
         let message = 'An error occurred while shortening the URL.';
+        
         if (err.code === 'ER_DUP_ENTRY') {
             message = 'The provided alias already exists. Please choose a different alias.';
+        } else {
+            console.error('Unexpected error shortening URL:', err);
         }
+        
         res.status(500).json({ 
             'message': message,
             'error': 'Internal Server Error' 
