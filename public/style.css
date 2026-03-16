@@ -1,0 +1,199 @@
+/* 1. Global Reset & Base Styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+body {
+    /* Attractive Accent Gradient Background */
+    background-color: #0f172a;
+    background-image: 
+        radial-gradient(at 0% 0%, hsla(197, 100%, 49%, 0.15) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, hsla(188, 100%, 40%, 0.15) 0px, transparent 50%),
+        linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* 2. Card Container */
+.container {
+    width: 100%;
+    max-width: 620px;
+}
+
+.card {
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+/* 3. Navigation Tabs */
+.tabs {
+    display: flex;
+    border-bottom: 1px solid #edf2f7;
+}
+
+.tab {
+    flex: 1;
+    padding: 20px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.05rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.tab.active {
+    background: #ffffff;
+    color: #1a202c;
+}
+
+.tab.inactive {
+    background: #00738c;
+    color: #ffffff;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.tab.inactive:hover {
+    background: #0089a7;
+}
+
+/* 4. Form Layout */
+.content {
+    padding: 40px;
+}
+
+.input-group {
+    margin-bottom: 24px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Fixed Vertical Alignment Logic */
+.row {
+    display: flex;
+    align-items: flex-start; /* Aligns the tops of the containers */
+    gap: 12px;
+}
+
+label {
+    height: 22px; /* Fixed height keeps inputs below aligned */
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #2d3748;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.95rem;
+}
+
+.required {
+    color: #e53e3e;
+    margin-left: 2px;
+}
+
+/* Input Fields */
+input, select {
+    width: 100%;
+    height: 48px; /* Fixed height for uniformity */
+    padding: 0 14px;
+    border: 1px solid #cbd5e0;
+    border-radius: 6px;
+    font-size: 1rem;
+    color: #4a5568;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input:focus, select:focus {
+    border-color: #00738c;
+    box-shadow: 0 0 0 3px rgba(0, 115, 140, 0.1);
+}
+
+/* The separator slash alignment */
+.separator {
+    margin-top: 44px; /* Manually offset to center with the inputs */
+    font-size: 1.4rem;
+    color: #a0aec0;
+    font-weight: 300;
+}
+
+.flex-2 { flex: 2; }
+.flex-3 { flex: 3; }
+
+small {
+    margin-top: 6px;
+    color: #718096;
+    font-size: 0.8rem;
+}
+
+/* 5. Action Button */
+.btn-shorten {
+    width: 100%;
+    padding: 16px;
+    background-color: #2e7d32;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    margin-top: 10px;
+}
+
+.btn-shorten:hover {
+    background-color: #246327;
+}
+
+.btn-shorten:active {
+    transform: scale(0.99);
+}
+
+/* 6. Footer Text */
+.terms {
+    margin-top: 24px;
+    font-size: 0.85rem;
+    color: #4a5568;
+    line-height: 1.5;
+    text-align: left;
+}
+
+.terms a {
+    color: #00738c;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.terms a:hover {
+    text-decoration: underline;
+}
+
+/* 7. Responsive Adjustments */
+@media (max-width: 520px) {
+    .row {
+        flex-direction: column;
+        gap: 0;
+    }
+    
+    .separator {
+        display: none;
+    }
+    
+    .input-group {
+        width: 100%;
+    }
+
+    .content {
+        padding: 25px;
+    }
+}

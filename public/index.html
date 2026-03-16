@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tinyurl Clone</title>
+    <link rel="icon" type="image/png" href="images/icon-192.png">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <div class="container">
+        <div class="card">
+            <div class="tabs">
+                <div class="tab active">
+                    <i class="fas fa-link"></i> Shorten a Link
+                </div>
+            </div>
+
+            <form id="shortenForm" class="content">
+                <div class="input-group">
+                    <label for="longUrl"><i class="fas fa-paper-plane"></i> Long URL <span class="required">*</span></label>
+                    <input type="text" id="longUrl" placeholder="Paste long URL here" required>
+                </div>
+
+                <div class="row">
+                    <div class="input-group flex-2">
+                        <label for="domain"><i class="fas fa-globe"></i> Domain</label>
+                        <select id="domain">
+                            <option value="localhost:3000">localhost:3000</option>
+                        </select>
+                    </div>
+                    <span class="separator">/</span>
+                    <div class="input-group flex-3">
+                        <label for="alias"><i class="fas fa-pen-nib"></i> Alias (optional)</label>
+                        <input type="text" id="alias" placeholder="Add alias here" minlength="5">
+                        <small>Must be at least 5 characters</small>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-shorten">Shorten Link</button>
+
+                <p class="terms">
+                    By clicking Shorten Link, you agree that you have nothing better going on in your life right now.
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
