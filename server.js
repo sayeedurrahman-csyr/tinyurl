@@ -41,22 +41,33 @@ app.post('/api/shorten-url', async (req, res) => {
     long_url = long_url.trim().toLowerCase();
     alias = alias.trim().toLowerCase();
 
-    // If the user input did not include protocol
-    if (!(long_url.startsWith('http') || long_url.startsWith('https'))) {
-        // Check with https first
+    if (!(long_url.startsWith('http://') || long_url.startsWith('https://'))) {
         let protocol = 'https://';
-        let response = await fetch(protocol + long_url, { method: 'HEAD' });
-        if (!response.ok) {
-            // If https fails, try with http
-            protocol = 'http://';
+        let response;
+
+        try {
             response = await fetch(protocol + long_url, { method: 'HEAD' });
-            // If both fail, then return error
+            
             if (!response.ok) {
+                throw new Error('Fallback to HTTP'); 
+            }
+        } catch (e) {
+            try {
+                protocol = 'http://';
+                response = await fetch(protocol + long_url, { method: 'HEAD' });
+            } catch (innerError) {
                 return res.status(400).json({ 
-                    'message': 'The provided long_url is not valid or reachable.',
-                    'error': 'Bad Request' 
+                    'message': 'The provided long_url is not reachable.',
+                    'error': 'Network Error' 
                 });
             }
+        }
+
+        if (!response || !response.ok) {
+            return res.status(400).json({ 
+                'message': 'The provided long_url is not valid.',
+                'error': 'Bad Request' 
+            });
         }
 
         long_url = protocol + long_url;
