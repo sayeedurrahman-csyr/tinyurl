@@ -5,29 +5,31 @@ exports.shorten_url = async (req, res) => {
     let { alias, long_url } = req.body;
 
     if (!long_url) {
-        return res.status(400).json({
-            message: 'Alias and long_url are required fields.',
-            error: 'Bad Request'
+        return res.status(400).json({ 
+            'message': 'Alias and long_url are required fields.',
+            'error': 'Bad Request' 
         });
     }
 
-    const forbiddenUrls = ['/', '/api', '/api/shorten-url', '/404'];
-    if (forbiddenUrls.includes(long_url)) {
+    let forbidden_paths = ['/', '/api', '/api/shorten-url', '/404'];
+    if (forbidden_paths.includes(long_url.trim())) {
         return res.status(400).json({
-            message: 'Forbidden long url input',
-            error: 'Bad Request'
-        });
+            'message': 'Forbidden long url input',
+            'error': 'Bad Reqeust'
+        })
     }
 
-    if (alias?.includes('/')) {
+    if (alias && alias.includes('/')) {
         return res.status(400).json({
-            message: "Alias cannot contain subroutes with '/'",
-            error: 'Bad Request'
-        });
+            'message': "Alias cannot contain subroutes with '/'",
+            'error': 'Bad Request'
+        })
     }
 
     if (!alias) {
-        alias = Math.random().toString(36).substring(2, 8);
+        // Generate random alphaneumeric string of length
+        length = 6;
+        alias = Math.random().toString(36).substring(2, 2 + length);
     }
 
     long_url = long_url.trim().toLowerCase();
@@ -39,42 +41,53 @@ exports.shorten_url = async (req, res) => {
 
         try {
             response = await fetch(protocol + long_url, { method: 'HEAD' });
-            if (!response.ok) throw new Error('Fallback to HTTP');
-        } catch {
+            
+            if (!response.ok) {
+                throw new Error('Fallback to HTTP'); 
+            }
+        } catch (e) {
             try {
                 protocol = 'http://';
                 response = await fetch(protocol + long_url, { method: 'HEAD' });
-            } catch {
-                return res.status(400).json({
-                    message: 'The provided long_url is not reachable...',
-                    error: 'Network Error'
+            } catch (innerError) {
+                return res.status(400).json({ 
+                    'message': 'The provided long_url is not reachable. This may happen if the URL is invalid or if the server hosting the URL does not support HEAD requests. If you believe this is not right, please specify the exact protocol you want to use (http://example.com or https://example.com).',
+                    'error': 'Network Error' 
                 });
             }
         }
 
-        if (!response?.ok) {
-            return res.status(400).json({
-                message: 'The provided long_url is not valid.',
-                error: 'Bad Request'
+        if (!response || !response.ok) {
+            return res.status(400).json({ 
+                'message': 'The provided long_url is not valid.',
+                'error': 'Bad Request' 
             });
         }
 
         long_url = protocol + long_url;
     }
 
+    
+    // Store into database
     try {
-        await db.query('INSERT INTO mapping (alias, long_url) VALUES (?, ?)', [alias, long_url]);
-        res.status(200).json({
-            message: `URL creation successful for ${long_url}`,
-            short_url: `http://localhost:${PORT}/${alias}`
+        let _ = await db.query('INSERT INTO mapping (alias, long_url) VALUES (?, ?)', [alias, long_url]);
+        res.status(200).json({ 
+            'message': `URL creation successful for ${long_url}`,
+            'short_url': `http://localhost:${PORT}/${alias}` 
         });
-    } catch (err) {
-        const message = err.code === 'ER_DUP_ENTRY'
-            ? 'The provided alias already exists. Please choose a different alias.'
-            : 'An error occurred while shortening the URL.';
+    }
+    catch (err) {
+        let message = 'An error occurred while shortening the URL.';
+        
+        if (err.code === 'ER_DUP_ENTRY') {
+            message = 'The provided alias already exists. Please choose a different alias.';
+        } else {
+            console.error('Unexpected error shortening URL:', err);
+        }
 
-        if (err.code !== 'ER_DUP_ENTRY') console.error('Unexpected error shortening URL:', err);
-
-        res.status(500).json({ message, error: 'Internal Server Error' });
+        res.status(500).json({ 
+            'message': message,
+            'error': 'Internal Server Error' 
+        });
     }
 };
