@@ -1,4 +1,4 @@
-const API_URL = 'localhost:3000'
+const API_URL = 'http://localhost:3000'
 
 document.getElementById('shortenForm').addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -20,15 +20,22 @@ document.getElementById('shortenForm').addEventListener('submit', async (e) => {
             },
             body: JSON.stringify(formData)
         });
-
+        
+        const result = await response.json();
         if (response.ok) {
-            const result = await response.json();
-            alert('Your short link is: ' + result.short_url);
+            displayMessage(`Success! Your link: <a href="${result.short_url}" target="_blank">${result.short_url}</a>`, 'success');
         } else {
-            alert('Something went wrong. Please check your alias or connection.');
+            // alert('Something went wrong. Please check your alias or connection.');
+            displayMessage(`Error: ${result.message || 'Validation failed.'}`, 'error');
         }
     } catch (error) {
         console.error('Error:', error);
         alert('Network error. See console for details.');
     }
 });
+
+function displayMessage(htmlContent, type) {
+    messageBox.innerHTML = htmlContent;
+    messageBox.classList.add(type); // adds 'success' or 'error' class
+    messageBox.style.display = 'block';
+}
