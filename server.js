@@ -25,6 +25,13 @@ app.post('/api/shorten-url', async (req, res) => {
         })
     }
 
+    if (alias && alias.includes('/')) {
+        return res.status(400).json({
+            'message': "Alias cannot contain subroutes with '/'",
+            'error': 'Bad Request'
+        })
+    }
+
     if (!alias) {
         // Generate random alphaneumeric string of length
         length = 6;
