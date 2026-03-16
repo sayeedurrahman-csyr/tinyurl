@@ -1,4 +1,5 @@
 const db = require('../../db/connectionPool');
+const path = require('path');  
 const PORT = 3000;
 
 exports.redirect_to_longUrl = async (req, res) => {
@@ -20,5 +21,6 @@ exports.redirect_to_longUrl = async (req, res) => {
 };
 
 exports.not_found = async (req, res) => {
-    res.sendFile(path.join(__dirname, '../public', 'NotFound.html'));
+    // public/NotFound.html
+    res.sendFile(path.join(__dirname, '../../public', 'NotFound.html'));
 };
