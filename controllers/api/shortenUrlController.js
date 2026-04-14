@@ -51,7 +51,7 @@ exports.shorten_url = async (req, res) => {
                 response = await fetch(protocol + long_url, { method: 'HEAD' });
             } catch (innerError) {
                 return res.status(400).json({ 
-                    'message': 'The provided long_url is not reachable. This may happen if the URL is invalid or if the server hosting the URL does not support HEAD requests. If you believe this is not right, please specify the exact protocol you want to use (http://example.com or https://example.com).',
+                    'message': 'The provided Long URL is not reachable. This may happen if the URL is invalid or if the server hosting the URL does not support HEAD requests. If you believe this is not right, please specify the exact protocol you want to use (http://example.com or https://example.com).',
                     'error': 'Network Error' 
                 });
             }
@@ -59,7 +59,7 @@ exports.shorten_url = async (req, res) => {
 
         if (!response || !response.ok) {
             return res.status(400).json({ 
-                'message': 'The provided long_url is not valid.',
+                'message': 'The provided Long URL is not valid.',
                 'error': 'Bad Request' 
             });
         }
@@ -73,7 +73,7 @@ exports.shorten_url = async (req, res) => {
         let _ = await db.query('INSERT INTO mapping (alias, long_url) VALUES (?, ?)', [alias, long_url]);
         res.status(200).json({ 
             'message': `URL creation successful for ${long_url}`,
-            'short_url': `http://localhost:${PORT}/${alias}` 
+            'short_url': `${alias}` 
         });
     }
     catch (err) {

@@ -1,5 +1,3 @@
-const API_URL = 'http://localhost:3000'
-
 document.getElementById('shortenForm').addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -11,7 +9,7 @@ document.getElementById('shortenForm').addEventListener('submit', async (e) => {
     };
 
     try {
-        const response = await fetch(`${API_URL}/api/shorten-url`, {
+        const response = await fetch(`/api/shorten-url`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -21,7 +19,7 @@ document.getElementById('shortenForm').addEventListener('submit', async (e) => {
         
         const result = await response.json();
         if (response.ok) {
-            displayMessage(`Success! Your link: <a href="${result.short_url}" target="_blank">${result.short_url}</a>`, 'success');
+            displayMessage(`Success! Your link: <a href="${result.short_url}" target="_blank">${window.location.hostname}/${result.short_url}</a>`, 'success');
         } else {
             // alert('Something went wrong. Please check your alias or connection.');
             displayMessage(`Error: ${result.message || 'Validation failed.'}`, 'error');
